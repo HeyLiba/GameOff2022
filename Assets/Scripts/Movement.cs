@@ -6,7 +6,7 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D gun;
     private SpringJoint2D gunJoint;
-    const float MAX_GUN_DISTANCE = 5.0f;
+    const float MAX_GUN_DISTANCE = 3.0f;
     //speed
     [SerializeField] private float speed = 20.0f;
     [SerializeField] private float jumpSpeed = 40.0f;
