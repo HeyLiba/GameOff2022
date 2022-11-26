@@ -20,15 +20,16 @@ public class Canon : MonoBehaviour
                 float now = Time.time;
                 if (lastShoot + shootCoolDown < now)
                 {
-                    Shoot();
+                    StartCoroutine(Shoot());
                     lastShoot = now;
                 }
             }
         }
     }
 
-    void Shoot()
+    IEnumerator Shoot()
     {
+        yield return new WaitForSeconds(shootCoolDown);
         Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
         bullet.AddForce(shootForce * shootPoint.transform.up, ForceMode2D.Impulse);
     }
