@@ -33,6 +33,12 @@ public class Movement : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        float now = Time.time;
+
+        isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0, groundLayer);
+        if (isGrounded)
+            lastGrounded = now;
+
         horizontalInput = Input.GetAxis("Horizontal");
         if (isGrounded) {
             rb.AddForce(horizontalInput * speed * Vector2.right);
@@ -56,10 +62,6 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         float now = Time.time;
-
-        isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0, groundLayer);
-        if (isGrounded)
-            lastGrounded = now;
 
         if (Input.GetKey(KeyCode.Space) && lastGrounded + coyoteTime > now && lastJump + jumpColldown < now)
         {

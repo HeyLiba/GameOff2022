@@ -10,11 +10,13 @@ public class Canon : MonoBehaviour
     [SerializeField] float rayDistance = 10f;
     [SerializeField] private float shootCoolDown = 2f;
     private float lastShoot = -999f;
+    [SerializeField] private LayerMask rayMask;
     private void FixedUpdate()
     {
-        RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, Vector2.left, rayDistance);
+        RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, transform.right, rayDistance, rayMask);
         if (hit.collider)
         {
+            Debug.DrawLine(hit.point, shootPoint.position, Color.black);
             if (hit.collider.gameObject.CompareTag("Player"))
             {
                 float now = Time.time;
@@ -31,6 +33,6 @@ public class Canon : MonoBehaviour
     {
         yield return new WaitForSeconds(shootCoolDown);
         Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
-        bullet.AddForce(shootForce * shootPoint.transform.up, ForceMode2D.Impulse);
+        bullet.AddForce(shootForce * transform.right, ForceMode2D.Impulse);
     }
 }
