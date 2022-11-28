@@ -14,6 +14,13 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Rigidbody2D playerRb;
     [SerializeField] private Rigidbody2D gunRb;
 
+    private Inventory inventory;
+
+    private void Start()
+    {
+        inventory = GetComponent<Inventory>();    
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -26,9 +33,12 @@ public class Weapon : MonoBehaviour
 
     void Shoot()
     {
-        Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
-        bullet.AddForce(shootForce * shootPoint.transform.up, ForceMode2D.Impulse);
-        gunRb.AddForce(-gunKnockBackForce * shootPoint.transform.up, ForceMode2D.Impulse);
-        playerRb.AddForce(-playerKnockBackForce * shootPoint.transform.up, ForceMode2D.Impulse);
+        if (inventory.UseAmmo())
+        {
+            Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+            bullet.AddForce(shootForce * shootPoint.transform.up, ForceMode2D.Impulse);
+            gunRb.AddForce(-gunKnockBackForce * shootPoint.transform.up, ForceMode2D.Impulse);
+            playerRb.AddForce(-playerKnockBackForce * shootPoint.transform.up, ForceMode2D.Impulse);
+        }
     }
 }

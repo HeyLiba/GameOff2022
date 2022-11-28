@@ -9,8 +9,17 @@ public class Canon : MonoBehaviour
     [SerializeField] float shootForce = 10f;
     [SerializeField] float rayDistance = 10f;
     [SerializeField] private float shootCoolDown = 2f;
+    [SerializeField] private float shootDelay = 2f;
     private float lastShoot = -999f;
     [SerializeField] private LayerMask rayMask;
+
+    private Inventory inventory;
+
+    private void Start()
+    {
+        inventory = GetComponent<Inventory>();   
+    }
+
     private void FixedUpdate()
     {
         RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, transform.right, rayDistance, rayMask);
@@ -31,8 +40,11 @@ public class Canon : MonoBehaviour
 
     IEnumerator Shoot()
     {
-        yield return new WaitForSeconds(shootCoolDown);
-        Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
-        bullet.AddForce(shootForce * transform.right, ForceMode2D.Impulse);
+        if (inventory.UseAmmo())
+        {
+            yield return new WaitForSeconds(shootDelay);
+            Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+            bullet.AddForce(shootForce * transform.right, ForceMode2D.Impulse);
+        }
     }
 }

@@ -6,7 +6,13 @@ public class Bullet : MonoBehaviour
 {
     public float level = 1f;
     [SerializeField] Color expiredColor = Color.gray;
-    private bool expired = false;
+    [SerializeField] private bool expired = false;
+
+    private void Start()
+    {
+        if (expired)
+            GetComponent<SpriteRenderer>().color = expiredColor;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -16,6 +22,10 @@ public class Bullet : MonoBehaviour
             if (!expired)
             {
                 collision.gameObject.GetComponent<Temperature>().Heat(level, collision.GetContact(0).point);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<Inventory>().AddAmmo();
             }
             Destroy(gameObject);
         }

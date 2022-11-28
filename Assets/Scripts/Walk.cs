@@ -54,6 +54,7 @@ public class Walk : MonoBehaviour
             moveDirX *= -1;
             jumpRay.x *= -1;
             frontRay.x *= -1;
+            transform.Rotate(Vector2.up, 180f);
         }
         else
 

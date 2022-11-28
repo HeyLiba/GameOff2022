@@ -22,7 +22,7 @@ public class Temperature : MonoBehaviour
 
     public virtual void OverHeat()
     {
-        Debug.Log(name + " Destroyed :(");
+        GetComponent<Inventory>().DropAll();
         Destroy(gameObject);
     }
 }

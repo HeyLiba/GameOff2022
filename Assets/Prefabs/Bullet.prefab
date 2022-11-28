@@ -136,4 +136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da70f3406398985439bf984e003cb63c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expiredColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  level: 1
+  expiredColor: {r: 0, g: 0, b: 0, a: 1}
+  expired: 0
