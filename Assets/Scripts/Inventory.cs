@@ -41,17 +41,8 @@ public class Inventory : MonoBehaviour
 
     private void AmmoPopup()
     {
-        if (ammo > 0)
-        {
-            TMPro.TMP_Text popup = Instantiate(ammoPopupPrefab, popupTarget.position, Quaternion.identity);
-            popup.text = ammo.ToString();
-        }
-        else
-        {
-            TMPro.TMP_Text popup = Instantiate(ammoPopupPrefab, popupTarget.position, Quaternion.identity);
-            popup.text = "out\nof\nammo";
-            popup.fontSize /= 1.5f;
-        }
+        TMPro.TMP_Text popup = Instantiate(ammoPopupPrefab, popupTarget.position, Quaternion.identity);
+        popup.text = ammo.ToString();
     }
 
     private void PlusOnePopup()
@@ -64,7 +55,7 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < ammo; i++)
         {
-            Rigidbody2D b = Instantiate(expiredBulletPrefap, transform.position, Quaternion.identity);
+            Rigidbody2D b = Instantiate(expiredBulletPrefap, transform.position + i * Vector3.up, Quaternion.identity);
             b.AddForce(Vector2.up * dropForce, ForceMode2D.Impulse);
         }
     }

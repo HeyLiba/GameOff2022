@@ -16,15 +16,20 @@ public class Weapon : MonoBehaviour
 
     private Inventory inventory;
 
+    [SerializeField] private AudioClip shootSound;
+    private AudioSource audioSource;
+
+
     private void Start()
     {
         inventory = GetComponent<Inventory>();    
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) && lastShoot+shootCoolDown < Time.time)
+        if (Input.GetKeyDown(KeyCode.L) && lastShoot+shootCoolDown < Time.time)
         {
             Shoot();
             lastShoot = Time.time;
@@ -35,10 +40,11 @@ public class Weapon : MonoBehaviour
     {
         if (inventory.UseAmmo())
         {
+            audioSource.PlayOneShot(shootSound, 0.2f);
             Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
-            bullet.AddForce(shootForce * shootPoint.transform.up, ForceMode2D.Impulse);
-            gunRb.AddForce(-gunKnockBackForce * shootPoint.transform.up, ForceMode2D.Impulse);
-            playerRb.AddForce(-playerKnockBackForce * shootPoint.transform.up, ForceMode2D.Impulse);
+            bullet.AddForce(shootForce * shootPoint.transform.right, ForceMode2D.Impulse);
+            gunRb.AddForce(-gunKnockBackForce * shootPoint.transform.right, ForceMode2D.Impulse);
+            playerRb.AddForce(-playerKnockBackForce * shootPoint.transform.right, ForceMode2D.Impulse);
         }
     }
 }

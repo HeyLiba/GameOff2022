@@ -25,11 +25,19 @@ public class Movement : MonoBehaviour
     //move
     private float horizontalInput;
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
+
+    //sounds
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip pushBackSound;
+    private AudioSource audioSource;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         gunJoint = gun.gameObject.GetComponent<SpringJoint2D>();
+        audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     private void FixedUpdate()
     {
@@ -66,6 +74,7 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && lastGrounded + coyoteTime > now && lastJump + jumpColldown < now)
         {
             rb.AddForce(jumpSpeed * Vector2.up);
+            audioSource.PlayOneShot(jumpSound, 0.1f);
             lastJump = now;
         }
 
@@ -76,8 +85,28 @@ public class Movement : MonoBehaviour
     {
         Vector3 anch = gunJoint.connectedAnchor;
         anch.x *= -1;
-        gun.gameObject.transform.Rotate(180.0f,0, 0);
+        gun.gameObject.transform.Rotate(0, 180f, 0);
         gunJoint.connectedAnchor = anch;
         facingRight = !facingRight;
+        spriteRenderer.flipX = !facingRight;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Vector2 dir = (transform.position - collision.transform.position).normalized;
+            if (dir.y > 0.8)
+            {
+                collision.gameObject.GetComponent<Temperature>().Heat(1, collision.transform.position);
+                rb.AddForce(dir * 10, ForceMode2D.Impulse);
+                audioSource.PlayOneShot(jumpSound, 0.1f);
+            }
+            else
+            {
+                rb.AddForce(dir * 10, ForceMode2D.Impulse);
+                audioSource.PlayOneShot(pushBackSound, 0.1f);
+            }
+        }
     }
 }

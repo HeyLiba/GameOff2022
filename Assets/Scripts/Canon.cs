@@ -15,9 +15,13 @@ public class Canon : MonoBehaviour
 
     private Inventory inventory;
 
+    [SerializeField] private AudioClip shootSound;
+    private AudioSource audioSource;
+
     private void Start()
     {
-        inventory = GetComponent<Inventory>();   
+        inventory = GetComponent<Inventory>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -43,6 +47,7 @@ public class Canon : MonoBehaviour
         if (inventory.UseAmmo())
         {
             yield return new WaitForSeconds(shootDelay);
+            audioSource.PlayOneShot(shootSound, 0.2f);
             Rigidbody2D bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
             bullet.AddForce(shootForce * transform.right, ForceMode2D.Impulse);
         }

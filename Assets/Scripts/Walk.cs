@@ -27,6 +27,8 @@ public class Walk : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask rayMask;
 
+    [SerializeField] private LayerMask targetLayer;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -49,25 +51,56 @@ public class Walk : MonoBehaviour
             Debug.DrawLine(transform.position, hitUp.point, Color.green);
         if (hitJump)
             Debug.DrawLine(transform.position, hitJump.point, Color.red);
-        if (hitFront && hitJump)
+
+
+        bool forceStop = false;
+        bool forceJump = false;
+        if (hitFront)
         {
-            moveDirX *= -1;
-            jumpRay.x *= -1;
-            frontRay.x *= -1;
-            transform.Rotate(Vector2.up, 180f);
+            // if front ray hit the target ! Stop dont move or jump anymore . Let canon do his work XD
+            forceStop = IsLayerInLayerMask(hitFront.collider.gameObject.layer, targetLayer);
+            if (!forceStop)
+            {
+
+                // flip back if wall is in front.
+                if (hitJump)
+                {
+                    //if jump ray hit the player jump and catch him.
+                    forceJump = IsLayerInLayerMask(hitJump.collider.gameObject.layer, targetLayer);
+                    if (!forceJump)
+                    {
+                        moveDirX *= -1;
+                        jumpRay.x *= -1;
+                        frontRay.x *= -1;
+                        transform.Rotate(Vector2.up, 180f);
+                    }
+                }
+
+                //jump on small slopes
+                if (
+                    ((isGrounded && !hitUp && !hitJump) | forceJump)
+                    &&
+                    (lastGrounded + coyoteTime > now && lastJump + jumpColldown < now)
+                    )
+                {
+                    rb.AddForce(jumpSpeed * Vector2.up, ForceMode2D.Impulse);
+                    lastJump = now;
+                }
+            }
         }
         else
-
-        if (hitFront && isGrounded && !hitUp && !hitJump 
-            && lastGrounded + coyoteTime > now 
-            && lastJump + jumpColldown < now)
         {
-            rb.AddForce(jumpSpeed * Vector2.up, ForceMode2D.Impulse);
-            lastJump = now;
+            forceStop = false;
         }
+        int dontStop = 1 - forceStop.GetHashCode();
 
         if (isGrounded)
-            rb.AddForce(moveDirX * moveSpeed * Vector2.right);
+            rb.AddForce(moveDirX * dontStop * moveSpeed * Vector2.right);
 
+    }
+
+    private bool IsLayerInLayerMask(int layer, LayerMask layerMask)
+    {
+        return layerMask == (layerMask | (1 << layer));
     }
 }

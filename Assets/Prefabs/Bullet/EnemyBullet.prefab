@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7814728762184919350}
   - component: {fileID: 7814728762184919351}
   - component: {fileID: -7464009464193177737}
-  m_Layer: 7
-  m_Name: Bullet
+  m_Layer: 11
+  m_Name: EnemyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,3 +139,4 @@ MonoBehaviour:
   level: 1
   expiredColor: {r: 0, g: 0, b: 0, a: 1}
   expired: 0
+  destroyEffect: {fileID: 8924533284718387706, guid: 53946fdb0c3bf544c96c1fb0875e7080, type: 3}

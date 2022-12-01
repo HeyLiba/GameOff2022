@@ -7,11 +7,14 @@ public class Bullet : MonoBehaviour
     public float level = 1f;
     [SerializeField] Color expiredColor = Color.gray;
     [SerializeField] private bool expired = false;
+    [SerializeField] GameObject destroyEffect;
+    private Rigidbody2D rb;
 
     private void Start()
     {
         if (expired)
             GetComponent<SpriteRenderer>().color = expiredColor;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -22,18 +25,35 @@ public class Bullet : MonoBehaviour
             if (!expired)
             {
                 collision.gameObject.GetComponent<Temperature>().Heat(level, collision.GetContact(0).point);
+                collision.gameObject.GetComponent<Rigidbody2D>()
+                    .AddForce((collision.transform.position - transform.position).normalized * 10);
+                Instantiate(destroyEffect, transform.position, Quaternion.identity);
             }
             else
             {
                 collision.gameObject.GetComponent<Inventory>().AddAmmo();
             }
-            Destroy(gameObject);
+            DestroyBullet();
         }
-        else
+    }
+
+    private void FixedUpdate()
+    {
+        if(rb.velocity.magnitude < 10)
         {
-            gameObject.layer = LayerMask.NameToLayer("ExpiredBullet");
-            GetComponent<SpriteRenderer>().color = expiredColor;
-            expired = true;
+            expireBullet();
         }
+    }
+
+    private void expireBullet()
+    {
+        gameObject.layer = LayerMask.NameToLayer("ExpiredBullet");
+        GetComponent<SpriteRenderer>().color = expiredColor;
+        expired = true;
+    }
+
+    private void DestroyBullet()
+    {
+        Destroy(gameObject);
     }
 }
