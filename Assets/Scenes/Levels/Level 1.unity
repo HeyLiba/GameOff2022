@@ -1055,7 +1055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8081053274234626307, guid: 7a5544fd0c6cdb347983c989d5fa9fce, type: 3}
       propertyPath: m_text
-      value: S
+      value: A
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a5544fd0c6cdb347983c989d5fa9fce, type: 3}
